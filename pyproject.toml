@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "ChatTGP"
+version = "v0.1"
+description = "ChatTGP v0.1"
+authors = [
+    "Vicente Agüero <vicentea@thegrowth.pro>",
+]
+readme = "README.md"
+packages = [
+    { include = "app", from = "." },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "^1.0.1"
+streamlit = "^1.47.1"
+google-cloud-storage = "^3.2.0"
+streamlit-ace = "^0.1.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+watchdog = "^6.0.0"
+ipykernel = "^6.29.5"
+ruff = "^0.11.2"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: mark test as integration (hits real APIs)"
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
