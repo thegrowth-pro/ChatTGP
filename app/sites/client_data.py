@@ -19,5 +19,5 @@ with right:
     if selected_domain:
         client_editor(selected_domain)
     else:
-        st.info('Select or create a domain to edit its content.')
+        st.info("Select or create a domain to edit the content.")
 

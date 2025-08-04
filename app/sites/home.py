@@ -2,8 +2,8 @@
 
 import streamlit as st
 
-from components import auth_form
 from src.layout import setup_layout
+from components import auth_form
 
 setup_layout(page_title='ChatTGP')
 

@@ -1,11 +1,13 @@
 # app/sites/testing.py
 
 import streamlit as st
+
 import requests
 import json
+
 from src.layout import setup_layout, protect_page
-from src.gcs import fetch_id_token
 from components import api_form, api_response
+from src.gcs import fetch_id_token
 
 setup_layout(page_title='ChatTGP - AI Testing')
 user = protect_page('editor')

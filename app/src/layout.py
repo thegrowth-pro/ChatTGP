@@ -24,6 +24,7 @@ def setup_layout(page_title: str):
         image=PATHS['logo'],
         link=GITHUB_URL,
     )
+    
     if 'user' in st.session_state:
         session_box(st.session_state['user'], logout)
 
@@ -69,6 +70,7 @@ def protect_page(required_role: str = None) -> dict:
     return user
 
 def logout():
+    """Logout and delete session data."""
     st.session_state.clear()
     st.session_state['_force_page'] = 'home'
     st.session_state['_redirecting'] = True

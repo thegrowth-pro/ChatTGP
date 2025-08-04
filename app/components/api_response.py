@@ -37,7 +37,7 @@ def _dur(start: str, end: str) -> str:
 def _table_freeblocks(data: dict, max_rows: int = 30):
     """Render a table of freeblocks with email, start, end, and duration."""
     rows = list()
-    for email, slots in (data or {}).items():
+    for email, slots in (data or dict()).items():
         for s in slots:
             rows.append({
                 'email': email,
@@ -119,9 +119,9 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
         return
 
     top_status = json_obj.get('status')
-    reply = json_obj.get('reply') or {}
-    raw = json_obj.get('raw_response') or {}
-    inner = raw.get('raw_response') or {}
+    reply = json_obj.get('reply') or dict()
+    raw = json_obj.get('raw_response') or dict()
+    inner = raw.get('raw_response') or dict()
 
     clf = _first_dict(raw.get('classification_response'), inner.get('classification_response'))
     aiw = _first_dict(raw.get('ai_worth_response'), inner.get('ai_worth_response'))

@@ -24,6 +24,8 @@ col_left, col_right = st.columns([1, 3])
 with col_left:
     prompt_tree(tree, handle_file_select)
 
+# TODO: Convert the col_right into a component.
+
 with col_right:
     if 'selected_prompt' in st.session_state:
         selected_blob = st.session_state['selected_prompt']

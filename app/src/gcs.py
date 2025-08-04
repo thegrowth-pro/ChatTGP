@@ -22,10 +22,11 @@ def read_text(bucket_name: str, blob_name: str) -> str:
     return blob.download_as_text()
 
 def write_text(
-        bucket_name: str,
-        blob_name: str,
-        content: str,
-        content_type: str = 'application/json'):
+    bucket_name: str,
+    blob_name: str,
+    content: str,
+    content_type: str = 'application/json'
+):
     """Write text to a blob in a Google Cloud Storage bucket."""
     blob = _client().bucket(bucket_name).blob(blob_name)
     blob.upload_from_string(content, content_type=content_type)

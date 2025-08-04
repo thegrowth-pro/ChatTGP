@@ -1,5 +1,7 @@
 # app/src/params.py
 
+import streamlit as st
+
 import os
 
 APP_NAME = 'app'
@@ -19,6 +21,11 @@ FAVICON_FILE = 'logo.jpg'
 README_ABOUT = 'ABOUT.md'
 GITHUB_URL = 'https://github.com/thegrowth-pro/ChatTGP'
 REPORT_URL_MAIL = 'mailto:vicentea@thegrowth.pro'
+
+# Google Cloud
+BUCKET = st.secrets['gcs']['bucket']
+CLIENT_DIR = st.secrets['gcs']['clients_folder']
+CONFIG_DIR = st.secrets['gcs']['config_file']
 
 ################################################################################
 
