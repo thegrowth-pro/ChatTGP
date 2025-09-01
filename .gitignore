@@ -211,4 +211,4 @@ gcs/auth/auth.json
 gcs/config/config.json
 
 # Streamlit
-secrets.toml
+secrets.toml*
