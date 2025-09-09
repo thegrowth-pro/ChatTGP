@@ -25,7 +25,7 @@ if submitted:
     url = f'{service_url}/{endpoint}'
     headers = {'Authorization': f'Bearer {id_token}','Content-Type': 'application/json'}
     try:
-        response = requests.post(url, headers=headers, json=payload, timeout=60)
+        response = requests.post(url, headers=headers, json=payload, timeout=300)
         try:
             resp_json = response.json()
         except json.JSONDecodeError:
