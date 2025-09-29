@@ -111,7 +111,8 @@ def setup_pages():
     if user and user['role'] in ('admin', 'editor'):
         pages['Editor'] = [
             st.Page(PATHS['pages']['prompt_engineering'], title='Prompt Engineering', icon='📝'),
-            st.Page(PATHS['pages']['client_data'], title='Client Data', icon='📊'),
+            st.Page(PATHS['pages']['client_data'], title='Client Data (Legacy)', icon='📊'),
+            st.Page(PATHS['pages']['client_config'], title='Client Configuration', icon='⚙️'),
             st.Page(PATHS['pages']['testing'], title='AI Testing', icon='🔍'),
         ]
 
