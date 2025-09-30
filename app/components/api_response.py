@@ -230,6 +230,47 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
         # All available freeblocks
         st.markdown('### 📊 All Available Freeblocks')
         _table_freeblocks(freeblocks)
+        
+        # Debug information
+        with st.expander("🔍 Debug Info - Calendar Query & Configuration"):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("**📋 Query Parameters:**")
+                if best_slots:
+                    timeslot_analysis = best_slots.get('timeslot_analysis', {})
+                    if timeslot_analysis:
+                        query_params = timeslot_analysis.get('query_params', {})
+                        st.write(f"**Start Date:** {query_params.get('start_date', 'N/A')}")
+                        st.write(f"**Days:** {query_params.get('days', 'N/A')}")
+                        st.write(f"**Slot Type:** {timeslot_analysis.get('slot_type', 'N/A')}")
+                    else:
+                        st.write("—")
+                else:
+                    st.write("No timeslot analysis available")
+            
+            with col2:
+                st.markdown("**⚙️ Calendar Config:**")
+                # Try to extract config from payload
+                if payload:
+                    from_email = payload.get('from', '')
+                    domain = from_email.split('@')[-1] if '@' in from_email else 'unknown'
+                    st.write(f"**Domain:** {domain}")
+                    # This will be in the raw response if available
+                st.write("Check 'Payloads' tab for full config")
+            
+            st.divider()
+            
+            if freeblocks:
+                st.markdown("**📅 Raw Freeblocks (from Google Calendar API):**")
+                st.caption("These are the FREE time slots returned by Google Calendar after removing busy periods")
+                st.json(freeblocks)
+                
+                # Count total slots
+                total_slots = sum(len(slots) for slots in freeblocks.values())
+                st.info(f"Total free slots: {total_slots}")
+            else:
+                st.warning("⚠️ No freeblocks data available")
 
     with tabs[2]:
         if clf:
