@@ -52,5 +52,8 @@ with col_right:
         )
 
         if st.button('Save'):
-            save_prompt_file(prompt_name, edited)
-            st.success(f'Saved `{internal_path}`')
+            try:
+                save_prompt_file(prompt_name, edited)
+                st.success(f'✅ Saved `{internal_path}`')
+            except Exception as e:
+                st.error(f'❌ Error saving `{internal_path}`: {e}')

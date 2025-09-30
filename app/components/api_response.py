@@ -34,7 +34,7 @@ def _dur(start: str, end: str) -> str:
     except Exception:
         return ''
 
-def _table_freeblocks(data: dict, max_rows: int = 30):
+def _table_freeblocks(data: dict, max_rows: int = None):
     """Render a table of freeblocks with email, start, end, and duration."""
     rows = list()
     for email, slots in (data or dict()).items():
@@ -48,9 +48,11 @@ def _table_freeblocks(data: dict, max_rows: int = 30):
     if not rows:
         st.write('—')
         return
-    if len(rows) > max_rows:
-        st.caption(f'Showing {max_rows}/{len(rows)}')
+    if max_rows and len(rows) > max_rows:
+        st.caption(f'Showing {max_rows}/{len(rows)} rows')
         rows = rows[:max_rows]
+    else:
+        st.caption(f'Total: {len(rows)} slots')
     st.dataframe(rows, use_container_width=True, hide_index=True)
 
 def _slots_block(text: str | None):
@@ -60,6 +62,52 @@ def _slots_block(text: str | None):
         return
     lines = [line.strip() for line in text.split('\n') if line.strip()]
     st.code('\n'.join(lines))
+
+def _best_slots_section(best_slots: dict | None):
+    """Render the best proposed slots section with details."""
+    if not best_slots:
+        st.write('—')
+        return
+    
+    selected = best_slots.get('selected', False)
+    proposed_slots = best_slots.get('proposed_slots', [])
+    feedback = best_slots.get('feedback', '')
+    proposal_type = best_slots.get('proposal_type', '')
+    matched_reference = best_slots.get('matched_reference', [])
+    
+    col1, col2 = st.columns([1, 3])
+    
+    with col1:
+        st.markdown(f"""
+            <span style='
+                background: {'#2e7d32' if selected else '#c62828'};
+                color: white;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-weight: bold;
+            '>
+                {'✓ SELECTED' if selected else '✗ NOT SELECTED'}
+            </span>
+        """, unsafe_allow_html=True)
+        
+        if proposal_type:
+            st.caption(f"Type: **{proposal_type}**")
+    
+    with col2:
+        if selected and proposed_slots:
+            st.markdown("**🎯 Selected slots:**")
+            slots_text = '\n'.join(proposed_slots) if isinstance(proposed_slots, list) else str(proposed_slots)
+            st.success(slots_text)
+        elif not selected:
+            st.warning("No viable slots found")
+    
+    if feedback:
+        st.markdown("**💬 AI Feedback:**")
+        st.info(feedback)
+    
+    if matched_reference:
+        with st.expander("📋 Matched reference slots"):
+            st.code('\n'.join(matched_reference) if isinstance(matched_reference, list) else str(matched_reference))
 
 def _badges(status: bool, aiw: dict | None, clf: dict | None):
     """Render badges for status, AI worth, and classification."""
@@ -130,6 +178,7 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
     payload_after = _first_dict(raw.get('payload_after_slots'), inner.get('payload_after_slots'))
     freeblocks = _first_dict(raw.get('freeblocks'), inner.get('freeblocks'))
     decisions = _first_dict(raw.get('decisions'), inner.get('decisions'))
+    best_slots = _first_dict(raw.get('best_proposed_slots'), inner.get('best_proposed_slots'))
 
     _badges(top_status, aiw, clf)
 
@@ -142,8 +191,7 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
             st.code(reply.get('body', ''), language='html')
 
     tabs = st.tabs([
-        'Summary', 'Classification', 'AI Worth', 'Metrics', 'Payloads',
-        'Freeblocks', 'Decisions', 'Raw'
+        'Summary', 'Calendar & Slots', 'Classification', 'AI Worth', 'Decisions', 'Payloads', 'Raw'
     ])
 
     with tabs[0]:
@@ -162,34 +210,39 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
             st.write('Metrics:', metrics)
 
     with tabs[1]:
+        st.subheader('📅 Calendar & Slots Analysis')
+        
+        # Best Proposed Slots (AI-optimized)
+        st.markdown('### 🎯 Best Proposed Slots (AI-optimized)')
+        _best_slots_section(best_slots)
+        
+        st.divider()
+        
+        # Final formatted slots used in email
+        st.markdown('### 📧 Final Slots for Email')
+        if clf and clf.get('proposed_slots'):
+            _slots_block(clf.get('proposed_slots'))
+        else:
+            st.write('—')
+        
+        st.divider()
+        
+        # All available freeblocks
+        st.markdown('### 📊 All Available Freeblocks')
+        _table_freeblocks(freeblocks)
+
+    with tabs[2]:
         if clf:
             st.json(clf)
-            st.markdown('**Proposed slots**')
-            _slots_block(clf.get('proposed_slots'))
             if clf.get('mentioned_emails'):
                 st.write('Mentioned emails:', clf['mentioned_emails'])
         else:
             st.write('—')
 
-    with tabs[2]:
+    with tabs[3]:
         st.json(aiw) if aiw else st.write('—')
 
-    with tabs[3]:
-        st.json(metrics) if metrics else st.write('—')
-
     with tabs[4]:
-        c1, c2 = st.columns(2)
-        with c1:
-            st.caption('payload')
-            st.json(payload) if payload else st.write('—')
-        with c2:
-            st.caption('payload_after_slots')
-            st.json(payload_after) if payload_after else st.write('—')
-
-    with tabs[5]:
-        _table_freeblocks(freeblocks)
-
-    with tabs[6]:
         if isinstance(decisions, list) and decisions:
             rows = list()
             for d in decisions:
@@ -203,7 +256,21 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
         else:
             st.write('—')
 
-    with tabs[7]:
+    with tabs[5]:
+        c1, c2 = st.columns(2)
+        with c1:
+            st.caption('payload')
+            st.json(payload) if payload else st.write('—')
+        with c2:
+            st.caption('payload_after_slots')
+            st.json(payload_after) if payload_after else st.write('—')
+        
+        if metrics:
+            st.divider()
+            st.caption('metrics')
+            st.json(metrics)
+
+    with tabs[6]:
         st.code(json.dumps(json_obj, indent=2, ensure_ascii=False), language='json')
 
     with st.expander('Request sent'):
