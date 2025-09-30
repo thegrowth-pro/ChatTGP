@@ -179,6 +179,7 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
     freeblocks = _first_dict(raw.get('freeblocks'), inner.get('freeblocks'))
     decisions = _first_dict(raw.get('decisions'), inner.get('decisions'))
     best_slots = _first_dict(raw.get('best_proposed_slots'), inner.get('best_proposed_slots'))
+    formatted_freeblocks = _first_dict(raw.get('formatted_freeblocks'), inner.get('formatted_freeblocks'))
 
     _badges(top_status, aiw, clf)
 
@@ -229,7 +230,19 @@ def api_response(status_code: int, text: str, json_obj: dict | None, request_pay
         
         # All available freeblocks
         st.markdown('### 📊 All Available Freeblocks')
-        _table_freeblocks(freeblocks)
+        if freeblocks:
+            if isinstance(freeblocks, str):
+                st.text(freeblocks)
+            else:
+                _table_freeblocks(freeblocks)
+        else:
+            st.write('—')
+        
+        st.divider()
+        
+        st.markdown('### 📊 Formatted Freeblocks')
+        st.text(formatted_freeblocks)
+        
         
         # Debug information
         with st.expander("🔍 Debug Info - Calendar Query & Configuration"):
