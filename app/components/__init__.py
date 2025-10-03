@@ -9,4 +9,4 @@ from .client_py_editor import client_py_editor
 from .prompt_tree import prompt_tree
 from .session_box import session_box
 from .auth_form import auth_form
-from .api_form import api_form, close_thread_form
+from .api_form import api_form, close_thread_form, close_thread_sent_form

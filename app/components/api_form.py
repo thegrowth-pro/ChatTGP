@@ -384,3 +384,222 @@ def close_thread_form():
             'body': clean_body(body),
             'thread': clean_body(thread)
         }
+
+
+def close_thread_sent_form():
+    
+    # Example scenarios
+    examples = {
+        'Close - Meeting Confirmed': {
+            'received_subject': 'Re: Propuesta de reunión',
+            'received_body': """
+                Hola Catalina,
+                
+                Perfecto! ¿Cuándo tienes disponibilidad para una llamada de 30 minutos?
+                Yo estoy libre el martes por la tarde.
+                
+                Saludos,
+                María
+            """,
+            'sent_to': 'maria.gonzalez@empresaXYZ.com',
+            'sent_body': """
+                Hola María,
+                
+                Excelente! Te agendé para el martes 8 de julio a las 15:00 hrs.
+                Te llegará la invitación de Google Calendar a este correo.
+                
+                Cualquier cosa me avisas!
+                
+                Saludos,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Close - Still Proposing (Should NOT Close)': {
+            'received_subject': 'Re: Coordinemos reunión',
+            'received_body': """
+                Hola Catalina,
+                
+                Me interesa mucho! ¿Cuándo podríamos conversar?
+                
+                Saludos,
+                Pedro
+            """,
+            'sent_to': 'pedro.ramirez@startup.cl',
+            'sent_body': """
+                Hola Pedro,
+                
+                Perfecto! Tengo disponibilidad el miércoles 10 a las 11:00 
+                o el jueves 11 a las 16:00.
+                
+                ¿Cuál te acomoda mejor?
+                
+                Saludos,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Safe - Rejection Acknowledged': {
+            'received_subject': 'Re: Propuesta comercial',
+            'received_body': """
+                Catalina,
+                
+                Gracias por tu interés, pero ya tenemos un proveedor con el que
+                estamos muy conformes y no estamos buscando cambiar.
+                
+                Saludos.
+            """,
+            'sent_to': 'director@empresa.com',
+            'sent_body': """
+                Hola Director,
+                
+                Entendido, muchas gracias por tu tiempo y honestidad.
+                
+                Si en algún momento cambian de parecer o necesitan una segunda
+                opinión, estaremos encantados de conversar.
+                
+                ¡Mucho éxito!
+                
+                Saludos cordiales,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Safe - OOO Handled': {
+            'received_subject': 'Respuesta automática',
+            'received_body': """
+                Respuesta automática: Fuera de la oficina
+                
+                Estaré fuera hasta el 15 de julio sin acceso regular al correo.
+                Para asuntos urgentes, contactar a asistente@empresa.com
+                
+                Saludos,
+                Carlos
+            """,
+            'sent_to': 'carlos.mendez@empresa.com',
+            'sent_body': """
+                Hola Carlos,
+                
+                Sin problema! Te contactaré después del 15 de julio.
+                
+                Que tengas un buen descanso!
+                
+                Saludos,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Convince - Should NOT Close': {
+            'received_subject': 'Re: Información sobre servicios',
+            'received_body': """
+                Hola Catalina,
+                
+                Suena interesante, pero necesito más información sobre
+                los resultados que han logrado con clientes similares.
+                
+                Saludos,
+                Laura
+            """,
+            'sent_to': 'laura.torres@corporativo.com',
+            'sent_body': """
+                Hola Laura,
+                
+                Claro que sí! Te comparto algunos casos de éxito:
+                
+                1. Cliente A: Incremento de 40% en conversiones
+                2. Cliente B: ROI de 3.5x en 6 meses
+                3. Cliente C: Reducción de 60% en costo por lead
+                
+                Te parece si agendamos una llamada para discutir cómo
+                podríamos lograr resultados similares para ustedes?
+                
+                Quedo atenta!
+                
+                Saludos,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Referral - Should NOT Close': {
+            'received_subject': 'Re: Oportunidad de colaboración',
+            'received_body': """
+                Hola Catalina,
+                
+                Yo no soy la persona indicada para esto.
+                Te sugiero contactar a Daniela López, nuestra Gerente Comercial.
+                Su correo es daniela.lopez@empresa.com
+                
+                Saludos,
+                Juan
+            """,
+            'sent_to': 'juan.perez@empresa.com',
+            'sent_body': """
+                Hola Juan,
+                
+                Muchas gracias por la referencia!
+                
+                Le escribiré directamente a Daniela López.
+                Te agradezco mucho la ayuda!
+                
+                Saludos,
+                Catalina
+            """,
+            'labels': ['AI']
+        },
+        'Safe - Bounce (Error Handled)': {
+            'received_subject': 'Mail Delivery Failed',
+            'received_body': """
+                Delivery Status Notification (Failure)
+                
+                This is an automatically generated Delivery Status Notification.
+                Delivery to the following recipients failed:
+                contacto@empresa-inexistente.com
+                Reason: 550 User unknown
+            """,
+            'sent_to': 'contacto@empresa-inexistente.com',
+            'sent_body': '',
+            'labels': ['BOUNCE']
+        }
+    }
+    
+    # Example selector before the form
+    example_key = st.selectbox(
+        'Select Example Scenario (Sent Message)',
+        list(examples.keys()),
+        index=0,
+        help='Choose a pre-loaded example to test different sent message scenarios',
+        key='sent_example_selector'
+    )
+    
+    selected_example = examples[example_key]
+    
+    with st.form('close_thread_sent_form'):
+
+        st.subheader('Close Thread (Sent) Test Input')
+
+        received_subject = st.text_input('Received Subject', value=selected_example['received_subject'])
+        received_body = st.text_area(
+            'Received Body',
+            height=120,
+            value=clean_body(selected_example['received_body'])
+        )
+        sent_to = st.text_input('Sent To', value=selected_example['sent_to'])
+        sent_body = st.text_area(
+            'Sent Body (Our Response)',
+            height=200,
+            value=clean_body(selected_example['sent_body'])
+        )
+        labels_input = st.text_input('Labels (comma-separated)', value=', '.join(selected_example['labels']))
+        
+        submitted = st.form_submit_button('Test Close Thread (Sent) API')
+
+        # Parse labels
+        labels = [label.strip() for label in labels_input.split(',') if label.strip()]
+
+        return submitted, {
+            'received_subject': received_subject,
+            'received_body': clean_body(received_body),
+            'sent_to': sent_to,
+            'sent_body': clean_body(sent_body),
+            'labels': labels
+        }
