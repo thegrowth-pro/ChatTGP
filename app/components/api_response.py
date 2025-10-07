@@ -96,7 +96,21 @@ def _best_slots_section(best_slots: dict | None):
     with col2:
         if selected and proposed_slots:
             st.markdown("**🎯 Selected slots:**")
-            slots_text = '\n'.join(proposed_slots) if isinstance(proposed_slots, list) else str(proposed_slots)
+            # Handle new format: [[ejecutivo, horario], ...] or legacy format: [horario, ...]
+            if isinstance(proposed_slots, list) and proposed_slots:
+                formatted_slots = []
+                for slot in proposed_slots:
+                    if isinstance(slot, list) and len(slot) >= 2:
+                        # New format: [ejecutivo, horario]
+                        formatted_slots.append(f"{slot[1]} (👤 {slot[0]})")
+                    elif isinstance(slot, str):
+                        # Legacy format: just horario string
+                        formatted_slots.append(slot)
+                    else:
+                        formatted_slots.append(str(slot))
+                slots_text = '\n'.join(formatted_slots)
+            else:
+                slots_text = str(proposed_slots)
             st.success(slots_text)
         elif not selected:
             st.warning("No viable slots found")
@@ -107,7 +121,12 @@ def _best_slots_section(best_slots: dict | None):
     
     if matched_reference:
         with st.expander("📋 Matched reference slots"):
-            st.code('\n'.join(matched_reference) if isinstance(matched_reference, list) else str(matched_reference))
+            # Ensure all items are strings before joining
+            if isinstance(matched_reference, list):
+                ref_text = '\n'.join(str(item) for item in matched_reference)
+            else:
+                ref_text = str(matched_reference)
+            st.code(ref_text)
 
 def _badges(status: bool, aiw: dict | None, clf: dict | None):
     """Render badges for status, AI worth, and classification."""

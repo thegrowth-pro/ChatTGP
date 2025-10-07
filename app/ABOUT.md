@@ -1,3 +1,3 @@
 # ChatTGP
 
-For any problem, contact with [vicentea@thegrowth.pro](mailto:vicentea@thegrowth.pro)
+For any problem, contact with [ignacio@thegrowth.pro](mailto:ignacio@thegrowth.pro)

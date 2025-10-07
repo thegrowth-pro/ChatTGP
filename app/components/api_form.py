@@ -300,25 +300,112 @@ def close_thread_form():
             """,
             'thread': ''
         },
-        'Unsubscribe Request': {
-            'subject': 'Re: Newsletter semanal',
+        'Spam - Inbound Prospecting (Apollo)': {
+            'subject': 'Expert live onboarding + Q&A',
+            'from': 'James from Apollo <james@mail.apollo.io>',
+            'to': 'roberto.camacho@chapi.cl',
+            'date': '2025-09-12T20:56:25Z',
+            'body': """
+                Hey Roberto,
+                
+                I'm James, Apollo Academy instructor here at Apollo. Need a hand getting started?
+                
+                I host daily live onboarding sessions where I teach you the basics of Apollo 
+                and answer your questions, and I'd love for you to join me for one.
+                
+                Folks who attend an onboarding session with me are 80% more likely to book a 
+                meeting than those that don't.
+                
+                Choose a time and sign up here: https://app.apollo.io/?utm_campaign=webinar
+                
+                See you there!
+                
+                James O'Sullivan
+                Apollo Academy Instructor
+                
+                ©2025 Apollo. All rights reserved.
+                Unsubscribe | Manage preferences
+            """,
+            'thread': """
+                === Mensaje anterior ===
+                De: roberto.camacho@chapi.cl
+                Fecha: 2025-09-12T15:56:48Z
+                
+                Re:
+            """
+        },
+        'Conversation Ended - Meeting Reminder': {
+            'subject': 'Re: Recordatorio reunión',
+            'from': 'begona@cliente.com',
+            'to': 'jaime.fuenzalida@welcomeback.io',
+            'date': '2025-10-06T09:05:00Z',
+            'body': """
+                Gracias, nos vemos.
+            """,
+            'thread': """
+                === Mensaje anterior (Manual SDR reminder) ===
+                De: jaime.fuenzalida@welcomeback.io
+                Fecha: 2025-10-06T09:00:00Z
+                
+                Hola Begoña,
+                
+                Solo recordarte nuestra reunión de hoy a las 11:00 hrs. Te comparto 
+                nuevamente el link para que nos conectemos: REUNIÓN CON WELCOMEBACK
+                http://meet.google.com/hpi-wypo-vts
+                
+                Quedo atento a cualquier cambio que necesites.
+                
+                Un abrazo,
+                Jaime
+            """
+        },
+        'Rejection - Should NOT Close': {
+            'subject': 'Re: Propuesta comercial',
             'from': 'cliente@empresa.com',
             'to': 'catalina.moraga@influence.cl',
             'date': '2025-07-02T16:00:00Z',
             'body': """
-                Hola,
+                Catalina,
                 
-                Por favor elimíname de tu lista de correos. No me interesa 
-                recibir más información.
+                Gracias por tu interés, pero ya tenemos un proveedor con el que
+                estamos muy conformes y no estamos buscando cambiar en este momento.
                 
-                Gracias.
+                Te agradecería que no me contactes nuevamente.
+                
+                Saludos.
             """,
             'thread': """
                 === Email anterior ===
                 De: catalina.moraga@influence.cl
                 Fecha: 2025-07-01T10:00:00Z
                 
-                Newsletter semanal con novedades...
+                Hola, te contacto para presentarte nuestra solución...
+            """
+        },
+        'Referral - Should NOT Close': {
+            'subject': 'Re: Propuesta comercial',
+            'from': 'ignacio@empresa.com',
+            'to': 'catalina.moraga@influence.cl',
+            'date': '2025-07-02T14:00:00Z',
+            'body': """
+                Hola Catalina,
+                
+                Yo no soy la persona indicada para esto.
+                
+                Te sugiero contactar a Daniela López, nuestra Gerente Comercial.
+                Su correo es daniela.lopez@empresa.com
+                
+                Ella podrá ayudarte mejor.
+                
+                Saludos,
+                Ignacio
+            """,
+            'thread': """
+                === Email anterior ===
+                De: catalina.moraga@influence.cl
+                Fecha: 2025-07-01T10:00:00Z
+                
+                Hola, te contacto para presentarte nuestra solución...
             """
         },
         'Ongoing Conversation': {
@@ -602,4 +689,274 @@ def close_thread_sent_form():
             'sent_to': sent_to,
             'sent_body': clean_body(sent_body),
             'labels': labels
+        }
+
+
+def create_meeting_form():
+    
+    # Example scenarios for creating meetings
+    examples = {
+        'Meeting with María González - EnterpriseXYZ': {
+            'from': 'catalina.moraga@influence.cl',
+            'to': 'maria.gonzalez@empresaXYZ.com',
+            'meeting_date': '2025-07-08T15:00:00',
+            'seller': 'catalina.moraga@influence.cl',
+            'thread': """
+                === Mensaje 1 (Inicial) ===
+                De: catalina.moraga@influence.cl
+                Para: maria.gonzalez@empresaXYZ.com
+                Fecha: 2025-07-01T10:00:00Z
+                Asunto: Propuesta de reunión
+                
+                Hola María,
+                
+                Gracias por tu interés en nuestros servicios de marketing digital.
+                ¿Cuándo tendrías disponibilidad para una llamada de 30 minutos?
+                
+                Tenemos slots el martes 8 a las 3 PM o el miércoles 9 a las 10 AM.
+                
+                Saludos,
+                Catalina Moraga
+                Influence Marketing
+                
+                === Mensaje 2 ===
+                De: maria.gonzalez@empresaXYZ.com
+                Para: catalina.moraga@influence.cl
+                Fecha: 2025-07-02T09:00:00Z
+                Asunto: Re: Propuesta de reunión
+                
+                Hola Catalina,
+                
+                ¡Perfecto! El martes 8 a las 3 PM me viene genial.
+                Soy Gerente de Marketing en EnterpriseXYZ y estoy muy 
+                interesada en conocer cómo pueden ayudarnos.
+                
+                Mi celular es +56 9 8765 4321 por si necesitan contactarme.
+                
+                Nos vemos entonces!
+                
+                Saludos,
+                María González
+                Gerente de Marketing
+                EnterpriseXYZ
+                
+                === Mensaje 3 (Confirmación) ===
+                De: catalina.moraga@influence.cl
+                Para: maria.gonzalez@empresaXYZ.com
+                Fecha: 2025-07-02T14:30:00Z
+                Asunto: Re: Propuesta de reunión
+                
+                Excelente María! 
+                
+                Te confirmo la reunión para el martes 8 de julio a las 15:00 hrs.
+                Te llegará la invitación de Google Calendar a este correo.
+                Juan Pérez también participará de la reunión.
+                
+                Cualquier cosa me avisas!
+                
+                Saludos,
+                Catalina
+            """
+        },
+        'Meeting with Pedro Ramírez - StartupCL': {
+            'from': 'catalina.moraga@influence.cl',
+            'to': 'pedro.ramirez@startup.cl',
+            'meeting_date': '2025-07-10T11:00:00',
+            'seller': 'catalina.moraga@influence.cl',
+            'thread': """
+                === Mensaje 1 ===
+                De: pedro.ramirez@startup.cl
+                Para: catalina.moraga@influence.cl
+                Fecha: 2025-07-05T16:00:00Z
+                Asunto: Consulta sobre servicios
+                
+                Hola,
+                
+                Me llamo Pedro Ramírez, soy CEO de StartupCL. 
+                Estamos buscando una agencia que nos ayude con marketing digital.
+                
+                ¿Tienen experiencia con startups en etapa temprana?
+                
+                Saludos,
+                Pedro
+                
+                === Mensaje 2 ===
+                De: catalina.moraga@influence.cl
+                Para: pedro.ramirez@startup.cl
+                Fecha: 2025-07-05T17:30:00Z
+                Asunto: Re: Consulta sobre servicios
+                
+                Hola Pedro!
+                
+                Claro que sí, tenemos bastante experiencia con startups.
+                ¿Te parece si coordinamos una llamada para conversar más?
+                
+                Tengo disponibilidad:
+                - Miércoles 10 a las 11:00
+                - Jueves 11 a las 16:00
+                
+                Saludos,
+                Catalina
+                
+                === Mensaje 3 ===
+                De: pedro.ramirez@startup.cl
+                Para: catalina.moraga@influence.cl
+                Fecha: 2025-07-06T10:00:00Z
+                Asunto: Re: Consulta sobre servicios
+                
+                Perfecto! El miércoles 10 a las 11:00 me viene bien.
+                
+                Nos vemos entonces!
+                Pedro
+            """
+        },
+        'Meeting with Laura Torres - Corporativo (with phone)': {
+            'from': 'juan.perez@influence.cl',
+            'to': 'laura.torres@corporativo.com',
+            'meeting_date': '2025-07-12T14:30:00',
+            'seller': 'juan.perez@influence.cl',
+            'thread': """
+                === Mensaje 1 ===
+                De: juan.perez@influence.cl
+                Para: laura.torres@corporativo.com
+                Fecha: 2025-07-08T09:00:00Z
+                Asunto: Propuesta de consultoría de marketing
+                
+                Hola Laura,
+                
+                Somos Influence, una agencia de marketing digital especializada
+                en empresas corporativas. Me gustaría conversar contigo sobre
+                cómo podemos ayudar a Corporativo con su estrategia digital.
+                
+                ¿Tendrías disponibilidad para una llamada?
+                
+                Saludos,
+                Juan Pérez
+                Influence
+                
+                === Mensaje 2 ===
+                De: laura.torres@corporativo.com
+                Para: juan.perez@influence.cl
+                Fecha: 2025-07-08T15:00:00Z
+                Asunto: Re: Propuesta de consultoría de marketing
+                
+                Hola Juan,
+                
+                Me interesa conocer más. ¿Cuándo podrían?
+                
+                Saludos,
+                Laura Torres
+                Directora de Marketing Digital
+                Corporativo SA
+                +56 2 3456 7890
+                
+                === Mensaje 3 ===
+                De: juan.perez@influence.cl
+                Para: laura.torres@corporativo.com
+                Fecha: 2025-07-09T10:00:00Z
+                Asunto: Re: Propuesta de consultoría de marketing
+                
+                Hola Laura,
+                
+                Perfecto! Te propongo:
+                - Viernes 12 a las 14:30
+                - Lunes 15 a las 10:00
+                
+                ¿Cuál te acomoda mejor?
+                
+                Saludos,
+                Juan
+                
+                === Mensaje 4 ===
+                De: laura.torres@corporativo.com
+                Para: juan.perez@influence.cl
+                Fecha: 2025-07-09T16:00:00Z
+                Asunto: Re: Propuesta de consultoría de marketing
+                
+                El viernes 12 a las 14:30 está perfecto.
+                
+                Nos vemos!
+                Laura
+            """
+        },
+        'Meeting with Josefa González - Quintec (detailed info)': {
+            'from': 'catalina.moraga@influence.cl',
+            'to': 'josefa.gonzalez@quintec.cl',
+            'meeting_date': '2025-07-09T10:00:00',
+            'seller': 'catalina.moraga@influence.cl',
+            'thread': """
+                === Mensaje 1 ===
+                De: josefa.gonzalez@quintec.cl
+                Para: catalina.moraga@influence.cl
+                Fecha: 2025-07-02T10:30:00Z
+                Asunto: ¿Podemos agendar 20 minutos?
+                
+                Hola Catalina,
+
+                Dentro de Quintec trabajo como Encargada de Marketing de BackOnline.
+                Esta es nuestra web para que nos conozcas www.backonline.cl.
+
+                Encantada de agendar una reunión para conocer cómo trabajan. 
+                
+                Tengo disponibilidad el próximo lunes a las 10:00 o martes a las 15:00.
+                ¿Te acomoda alguno de estos horarios?
+
+                Saludos,
+                Josefa González
+                Encargada de Marketing - BackOnline
+                Quintec
+                josefa.gonzalez@quintec.cl
+                +56 9 1234 5678
+                
+                === Mensaje 2 ===
+                De: catalina.moraga@influence.cl
+                Para: josefa.gonzalez@quintec.cl
+                Fecha: 2025-07-02T14:00:00Z
+                Asunto: Re: ¿Podemos agendar 20 minutos?
+                
+                Hola Josefa!
+                
+                Claro que sí! El lunes 9 a las 10:00 me viene perfecto.
+                Te enviaré la invitación de calendario.
+                
+                Saludos,
+                Catalina
+            """
+        }
+    }
+    
+    # Example selector before the form
+    example_key = st.selectbox(
+        'Select Example Scenario',
+        list(examples.keys()),
+        index=0,
+        help='Choose a pre-loaded example to test the create meeting flow',
+        key='create_meeting_example_selector'
+    )
+    
+    selected_example = examples[example_key]
+    
+    with st.form('create_meeting_form'):
+
+        st.subheader('Create Meeting Test Input')
+
+        from_email = st.text_input('From (Inbox)', value=selected_example['from'])
+        to_email = st.text_input('To (Prospect Email)', value=selected_example['to'])
+        meeting_date = st.text_input('Meeting Date (ISO format)', value=selected_example['meeting_date'])
+        seller = st.text_input('Seller', value=selected_example['seller'])
+        thread = st.text_area(
+            'Email Thread',
+            height=300,
+            value=clean_body(selected_example['thread']),
+            help='Full email thread where the meeting was confirmed'
+        )
+
+        submitted = st.form_submit_button('Test Create Meeting API')
+
+        return submitted, {
+            'sdr_email': from_email,
+            'prospect_email': to_email,
+            'meeting_date': meeting_date,
+            'seller': seller,
+            'thread': clean_body(thread)
         }
