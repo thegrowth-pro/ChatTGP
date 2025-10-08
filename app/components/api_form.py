@@ -922,6 +922,68 @@ def create_meeting_form():
                 Saludos,
                 Catalina
             """
+        },
+        'Meeting APP Test - EnterpriseXYZ': {
+            'from': 'inbox@empresa5.com',
+            'to': 'maria.gonzalez@empresaXYZ.com',
+            'meeting_date': '2025-10-20T15:00:00',
+            'seller': 'seller431@empresa5.com',
+            'thread': """
+                === Mensaje 1 (Inicial) ===
+                De: catalina.moraga@influence.cl
+                Para: maria.gonzalez@empresaXYZ.com
+                Fecha: 2025-07-01T10:00:00Z
+                Asunto: Propuesta de reunión
+                
+                Hola María,
+                
+                Gracias por tu interés en nuestros servicios de marketing digital.
+                ¿Cuándo tendrías disponibilidad para una llamada de 30 minutos?
+                
+                Tenemos slots el martes 8 a las 3 PM o el miércoles 9 a las 10 AM.
+                
+                Saludos,
+                Catalina Moraga
+                Influence Marketing
+                
+                === Mensaje 2 ===
+                De: maria.gonzalez@empresaXYZ.com
+                Para: inbox@empresa5.com
+                Fecha: 2025-07-02T09:00:00Z
+                Asunto: Re: Propuesta de reunión
+                
+                Hola Catalina,
+                
+                ¡Perfecto! El martes 8 a las 3 PM me viene genial.
+                Soy Gerente de Marketing en EnterpriseXYZ y estoy muy 
+                interesada en conocer cómo pueden ayudarnos.
+                
+                Mi celular es +56 9 8765 4321 por si necesitan contactarme.
+                
+                Nos vemos entonces!
+                
+                Saludos,
+                María González
+                Gerente de Marketing
+                EnterpriseXYZ
+                
+                === Mensaje 3 (Confirmación) ===
+                De: inbox@empresa5.com
+                Para: maria.gonzalez@empresaXYZ.com
+                Fecha: 2025-07-02T14:30:00Z
+                Asunto: Re: Propuesta de reunión
+                
+                Excelente María! 
+                
+                Te confirmo la reunión para el martes 8 de julio a las 15:00 hrs.
+                Te llegará la invitación de Google Calendar a este correo.
+                Juan Pérez también participará de la reunión.
+                
+                Cualquier cosa me avisas!
+                
+                Saludos,
+                Catalina
+            """
         }
     }
     
@@ -944,6 +1006,21 @@ def create_meeting_form():
         to_email = st.text_input('To (Prospect Email)', value=selected_example['to'])
         meeting_date = st.text_input('Meeting Date (ISO format)', value=selected_example['meeting_date'])
         seller = st.text_input('Seller', value=selected_example['seller'])
+        
+        # is_draft field: True (draftlist), False (automationlist), or None (neither)
+        is_draft_options = {
+            'True (draftlist)': True,
+            'False (automationlist)': False,
+            'None (neither)': None
+        }
+        is_draft_selected = st.selectbox(
+            'Is Draft',
+            options=list(is_draft_options.keys()),
+            index=0,
+            help='True if domain is in draftlist, False if in automationlist, None if in neither'
+        )
+        is_draft = is_draft_options[is_draft_selected]
+        
         thread = st.text_area(
             'Email Thread',
             height=300,
@@ -958,5 +1035,6 @@ def create_meeting_form():
             'prospect_email': to_email,
             'meeting_date': meeting_date,
             'seller': seller,
+            'is_draft': is_draft,
             'thread': clean_body(thread)
         }
